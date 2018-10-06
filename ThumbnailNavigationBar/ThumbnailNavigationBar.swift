@@ -15,6 +15,7 @@ class ThumbnailNavigationBar: UINavigationBar {
     private let separatorHeight: CGFloat
     private var contentView: UIView?
     private var preferredTintColor: UIColor?
+    private var backgroundHidden: Bool = false
 
     private var titleTextLabel: UILabel? {
         for subview in self.contentView?.subviews ?? [] {
@@ -46,14 +47,6 @@ class ThumbnailNavigationBar: UINavigationBar {
         }
     }
     var scrollViewMinimumOffset: CGFloat = 0
-
-    var backgroundHidden: Bool = false
-
-    func setBackgroundHidden(_ hidden: Bool, animated: Bool) {
-    }
-
-    func setBackgroundHidden(_ hidden: Bool, animated: Bool, forViewController vc: UIViewController?) {
-    }
 
     func setTargetScrollView(_ scrollView: UIScrollView, minimumOffset: CGFloat) {
         self.targetScrollView = scrollView
@@ -175,12 +168,69 @@ class ThumbnailNavigationBar: UINavigationBar {
         self.barStyle = offsetHeight > ((totalHeight - barHeight) * 0.5) ? self.preferredBarStyle : .black
     }
 
-    //mark: KVO Handling
-    
+    // MARK: KVO Handling
 
-    func captureAppTintColor() {
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        self.updateBackgroundVisibilityForScrollView()
+    }
+
+    // MARK: Transition handling
+
+    func setBackgroundHidden(_ hidden: Bool, animated: Bool = false, for ViewController: UIViewController? = nil) {
+        self.setNeedsLayout()
+
+        if hidden == backgroundHidden {
+            return
+        }
+
+        let animationBlock: (Bool) -> Void = {
+            hidden in
+            self.backgroundView.alpha = hidden ? 0.0 : 1.0
+            self.separatorView.alpha = hidden ? 0.0 : 1.0
+            self.tintColor = hidden ? UIColor.white : self.preferredTintColor
+
+            // iOS 11 fixes
+            let textColor = self.preferredBarStyle.rawValue > UIBarStyle.default.rawValue ? UIColor.white : UIColor.black
+            self.titleTextAttributes = [.foregroundColor: textColor]
+            self.largeTitleTextAttributes = [.foregroundColor: textColor]
+        }
+
+        let toggleBarStyleBlock: () -> Void = {
+            self.barStyle = hidden ? .black : self.preferredBarStyle
+        }
+
+        backgroundHidden = hidden
+        if hidden == false {
+            self.targetScrollView = nil
+        }
+
+        let transitionCoordinator = ViewController?.transitionCoordinator
+        //TODO: Make this easier
+        if (transitionCoordinator == nil) || (transitionCoordinator?.isInteractive == true) {
+            let duration = transitionCoordinator?.transitionDuration ?? 0.35
+            if animated {
+                UIView.animate(withDuration: duration) {
+                    toggleBarStyleBlock()
+                    animationBlock(hidden)
+                }
+            } else {
+                toggleBarStyleBlock()
+                animationBlock(hidden)
+            }
+        }
+
+        toggleBarStyleBlock()
+        transitionCoordinator?.animate(alongsideTransition: { _ in
+            animationBlock(hidden)
+        }, completion: { (context) in
+            if context.isCancelled {
+                animationBlock(hidden)
+            }
+        })
 
     }
+
+    // MARK: Internal View Traversal
 
     // Capturing internal views
     @discardableResult func captureContentView() -> Bool {
@@ -191,6 +241,20 @@ class ThumbnailNavigationBar: UINavigationBar {
             }
         }
         return false
+    }
+
+
+    func captureAppTintColor() {
+        if let _ = self.preferredTintColor {
+            return
+        }
+        let view = self
+        while let view = view.superview {
+            if let tintColor = view.tintColor {
+                self.preferredTintColor = tintColor
+                break
+            }
+        }
     }
 
 //    func captureAppTintColor() {
