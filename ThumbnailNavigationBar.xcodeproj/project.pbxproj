@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		424DB49D216940E1004EA1FE /* ThumbnailHeaderImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 424DB49C216940E1004EA1FE /* ThumbnailHeaderImageView.swift */; };
+		424DB49F216A406A004EA1FE /* SubSubViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 424DB49E216A406A004EA1FE /* SubSubViewController.swift */; };
 		42A3F98C21673A1B00CBECC1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42A3F98B21673A1B00CBECC1 /* AppDelegate.swift */; };
 		42A3F98E21673A1B00CBECC1 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42A3F98D21673A1B00CBECC1 /* ViewController.swift */; };
 		42A3F99321673A1D00CBECC1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 42A3F99221673A1D00CBECC1 /* Assets.xcassets */; };
@@ -36,6 +37,7 @@
 
 /* Begin PBXFileReference section */
 		424DB49C216940E1004EA1FE /* ThumbnailHeaderImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbnailHeaderImageView.swift; sourceTree = "<group>"; };
+		424DB49E216A406A004EA1FE /* SubSubViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubSubViewController.swift; sourceTree = "<group>"; };
 		42A3F98821673A1B00CBECC1 /* ThumbnailNavigationBar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ThumbnailNavigationBar.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		42A3F98B21673A1B00CBECC1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		42A3F98D21673A1B00CBECC1 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -99,6 +101,7 @@
 		42A3F98A21673A1B00CBECC1 /* ThumbnailNavigationBar */ = {
 			isa = PBXGroup;
 			children = (
+				424DB49E216A406A004EA1FE /* SubSubViewController.swift */,
 				42A3F98B21673A1B00CBECC1 /* AppDelegate.swift */,
 				42A3F98D21673A1B00CBECC1 /* ViewController.swift */,
 				42A3F9B921673AC900CBECC1 /* ThumbnailNavigationBar.swift */,
@@ -259,6 +262,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				424DB49D216940E1004EA1FE /* ThumbnailHeaderImageView.swift in Sources */,
+				424DB49F216A406A004EA1FE /* SubSubViewController.swift in Sources */,
 				42A3F9BA21673AC900CBECC1 /* ThumbnailNavigationBar.swift in Sources */,
 				42A3F98E21673A1B00CBECC1 /* ViewController.swift in Sources */,
 				42A3F98C21673A1B00CBECC1 /* AppDelegate.swift in Sources */,

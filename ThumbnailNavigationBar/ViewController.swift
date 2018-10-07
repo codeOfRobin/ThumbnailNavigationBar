@@ -8,25 +8,48 @@
 
 import UIKit
 
-class ViewController: UIViewController, UITableViewDelegate {
-
-    let tableView = UITableView()
+class ViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.addSubview(tableView)
-        tableView.delegate = self
+
+        // A Tribute
+        self.title = "TONavigationBar"
+        self.navigationController?.navigationBar.prefersLargeTitles = true
+        self.navigationItem.backBarButtonItem = UIBarButtonItem.init(title: "Back", style: .plain, target: nil, action: nil)
         // Do any additional setup after loading the view, typically from a nib.
     }
 
-
-
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        tableView.frame = view.bounds
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
     }
 
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 1
+    }
+
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let identifier = "cell"
+        var cell = tableView.dequeueReusableCell(withIdentifier: identifier)
+        if cell == nil {
+            cell = UITableViewCell.init(style: .default, reuseIdentifier: identifier)
+            cell?.accessoryType = .disclosureIndicator
+        }
+
+        cell?.textLabel?.text = "Tap here for clear bar"
+        return cell!
+    }
+
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let viewController = SubSubViewController.init(nibName: nil, bundle: nil)
+        self.navigationController?.pushViewController(viewController, animated: true)
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.thumbnailNavigationBar?.setBackgroundHidden(false, animated: animated, for: self)
+    }
+    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
         print((scrollView as? UITableView)?.contentOffset)
     }
 
