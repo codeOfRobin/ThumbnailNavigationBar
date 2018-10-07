@@ -208,6 +208,12 @@ class ThumbnailNavigationBar: UINavigationBar {
         //TODO: Make this easier
         if (transitionCoordinator == nil) || (transitionCoordinator?.isInteractive == true) {
             let duration = transitionCoordinator?.transitionDuration ?? 0.35
+
+            //TODO:
+            //I like having a utility `func animate(if animated: Bool, withDuration duration: TimeInterval, animations: () ->)` function
+            //
+            //Then you can call `UIView.animate(if: animated, withDuration: duration, animations: something)`
+
             if animated {
                 UIView.animate(withDuration: duration) {
                     toggleBarStyleBlock()
