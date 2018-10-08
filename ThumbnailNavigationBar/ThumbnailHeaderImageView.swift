@@ -13,55 +13,8 @@ protocol ScrollingResponsiveHeader where Self: ASDisplayNode {
     func respondToScrollOffset(_ scrollOffset: CGFloat)
 }
 
-class CoolHeaderWithButton: ASDisplayNode, ScrollingResponsiveHeader, ASNetworkImageNodeDelegate {
-
-    func respondToScrollOffset(_ scrollOffset: CGFloat) {
-        print(scrollOffset)
-    }
-
-    let header = ASNetworkImageNode()
-    let headerURL: URL
-    let height: CGFloat
-
-    init(url: URL, height: CGFloat) {
-        self.headerURL = url
-        self.height = height
-        super.init()
-        self.addSubnode(header)
-    }
-    
-    override func didLoad() {
-        super.didLoad()
-        self.header.image = UIImage(named: "Firewatch")
-        self.header.backgroundColor = .red
-        self.header.delegate = self
-    }
-
-    override func layout() {
-        self.frame = CGRect.init(x: 0, y: 0, width: self.bounds.width, height: height)
-        self.header.frame = self.bounds
-    }
-
-    override func layoutIfNeeded() {
-        super.layoutIfNeeded()
-    }
-
-    override func layoutSpecThatFits(_ constrainedSize: ASSizeRange) -> ASLayoutSpec {
-        return ASStackLayoutSpec(direction: .vertical, spacing: 0.0, justifyContent: .center, alignItems: .center, children: [header])
-    }
-}
-
-
 class ThumbnailHeaderImageView: UIView {
 
-    var image: UIImage {
-        didSet {
-            if image == oldValue {
-                return
-            }
-            self.imageView.image = image
-        }
-    }
     var scrollOffset: CGFloat = 0.0 {
         didSet {
             if scrollOffset == oldValue {
@@ -96,23 +49,22 @@ class ThumbnailHeaderImageView: UIView {
         }
     }
 
-    private let imageView: UIImageView
+    private let embeddedView: UIView
     private let gradientView: UIImageView
     private var shadowIsDirty: Bool
 
 
-    init(image: UIImage, height: CGFloat) {
-        self.image = image
+    init(embeddedView: UIView, height: CGFloat) {
+        self.embeddedView = embeddedView
         self.shadowHidden = true
         self.shadowAlpha = 0.2
         self.shadowIsDirty = true
 
-        self.imageView = UIImageView(image: image)
         self.gradientView = UIImageView(image: nil)
 
         super.init(frame: CGRect(x: 0, y: 0, width: 320, height: height))
         self.contentMode = .scaleAspectFill
-        self.imageView.clipsToBounds = true
+        self.embeddedView.clipsToBounds = true
 
         setupViews()
     }
@@ -123,14 +75,14 @@ class ThumbnailHeaderImageView: UIView {
 
     func setupViews() {
 
-        self.imageView.contentMode = .scaleAspectFill
-        self.imageView.clipsToBounds = true
-        self.imageView.backgroundColor = .black
-        self.addSubview(imageView)
+        self.embeddedView.contentMode = .scaleAspectFill
+        self.embeddedView.clipsToBounds = true
+        self.embeddedView.backgroundColor = .black
+        self.addSubview(embeddedView)
 
         self.gradientView.layer.magnificationFilter = .nearest
         self.gradientView.isHidden = true
-        self.imageView.addSubview(self.gradientView)
+        self.embeddedView.addSubview(self.gradientView)
     }
 
 
@@ -145,7 +97,7 @@ class ThumbnailHeaderImageView: UIView {
             frame.origin.y = -offset
             frame.size.height += offset
         }
-        self.imageView.frame = frame
+        self.embeddedView.frame = frame
 
         if self.shadowHidden {
             return
@@ -168,12 +120,12 @@ class ThumbnailHeaderImageView: UIView {
 
     func setBackgroundColor(_ backgroundColor: UIColor) {
         super.backgroundColor = backgroundColor
-        self.imageView.backgroundColor = backgroundColor
+        self.embeddedView.backgroundColor = backgroundColor
     }
 
     func setContentMode(_ contentMode: ContentMode) {
         super.contentMode = contentMode
-        self.imageView.contentMode = contentMode
+        self.embeddedView.contentMode = contentMode
     }
 
     static func shadowImageForHeight(_ shadowHeight: CGFloat, alpha: CGFloat) -> UIImage {

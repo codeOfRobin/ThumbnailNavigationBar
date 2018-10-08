@@ -8,31 +8,23 @@
 
 import AsyncDisplayKit
 
-class RedNode: ASCellNode {
-    override init() {
-        super.init()
-        self.backgroundColor = .red
-//        self.style.height = ASDimensionMake(200)
-//        self.style.width = ASDimensionMake(200)
-    }
-
-    override func layout() {
-        print(self.bounds)
-        self.frame = CGRect.init(x: 0, y: 0, width: 200, height: 200)
-    }
-
-    override func calculateLayoutThatFits(_ constrainedSize: ASSizeRange) -> ASLayout {
-        return ASLayout(layoutElement: self, size: CGSize.init(width: 200, height: 200))
-    }
-}
-
 class TextureExampleViewController: UIViewController, ASTableDelegate, ASTableDataSource {
 
     let tableNode = ASTableNode()
     let redNode = RedNode()
 
-    static let thumbnailURL = URL(string: "https://httpbin.org/image/png")
-    let header2 = CoolHeaderWithButton.init(url: TextureExampleViewController.thumbnailURL!, height: 200)
+    static let thumbnailURL = URL(string: "https://storage.googleapis.com/scott_test_bucket/readyp1080.jpg")
+    let header: ThumbnailHeaderImageView
+    let headerImage = ASNetworkImageNode()
+
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+        self.header = ThumbnailHeaderImageView(embeddedView: headerImage.view, height: 200)
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,7 +34,8 @@ class TextureExampleViewController: UIViewController, ASTableDelegate, ASTableDa
         self.navigationItem.largeTitleDisplayMode = .never
         self.tableNode.view.contentInsetAdjustmentBehavior = .never
 
-        self.tableNode.view.tableHeaderView = header2.view
+        headerImage.url = TextureExampleViewController.thumbnailURL!
+        self.tableNode.view.tableHeaderView = header
         self.tableNode.dataSource = self
         self.tableNode.delegate = self
 
@@ -50,7 +43,7 @@ class TextureExampleViewController: UIViewController, ASTableDelegate, ASTableDa
     }
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        self.header2.respondToScrollOffset(scrollView.contentOffset.y)
+        self.header.scrollOffset = scrollView.contentOffset.y
     }
 
     func numberOfSections(in tableNode: ASTableNode) -> Int {
@@ -65,6 +58,12 @@ class TextureExampleViewController: UIViewController, ASTableDelegate, ASTableDa
         let node =  RedNode()
         node.backgroundColor = .green
         return node
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.thumbnailNavigationBar?.setBackgroundHidden(true, animated: animated, for: self)
+        self.navigationController?.thumbnailNavigationBar?.setTargetScrollView(self.tableNode.view, minimumOffset: 200)
     }
 
 

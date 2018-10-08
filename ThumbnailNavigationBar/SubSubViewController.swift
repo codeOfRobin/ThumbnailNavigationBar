@@ -18,7 +18,7 @@ class SubSubViewController: UITableViewController {
         self.navigationItem.largeTitleDisplayMode = .never
         self.tableView.contentInsetAdjustmentBehavior = .never
 
-        self.headerView = ThumbnailHeaderImageView(image: UIImage(named: "Firewatch")!, height: 200)
+//        self.headerView = ThumbnailHeaderImageView(embeddedView: , height: 200)
         self.headerView?.shadowHidden = false
         self.tableView.tableHeaderView = self.headerView
     }
@@ -51,7 +51,6 @@ class SubSubViewController: UITableViewController {
     }
 
     override func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        print(scrollView.contentOffset.y)
         self.headerView?.scrollOffset = scrollView.contentOffset.y
     }
 
