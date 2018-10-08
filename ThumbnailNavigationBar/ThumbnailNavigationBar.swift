@@ -75,6 +75,11 @@ class ThumbnailNavigationBar: UINavigationBar {
         super.init(frame: frame)
     }
 
+    deinit {
+        self.targetScrollView?.removeObserver(self, forKeyPath: "contentOffset", context: nil
+        )
+    }
+
 
     override func didMoveToSuperview() {
         super.didMoveToSuperview()

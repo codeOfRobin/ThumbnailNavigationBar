@@ -8,6 +8,23 @@
 
 import AsyncDisplayKit
 
+class RedNode: ASCellNode {
+    override init() {
+        super.init()
+        self.backgroundColor = .red
+//        self.style.height = ASDimensionMake(200)
+//        self.style.width = ASDimensionMake(200)
+    }
+
+    override func layout() {
+        self.frame = CGRect.init(x: 0, y: 0, width: 200, height: 200)
+    }
+
+    override func calculateLayoutThatFits(_ constrainedSize: ASSizeRange) -> ASLayout {
+        return ASLayout(layoutElement: self, size: CGSize.init(width: 200, height: 200))
+    }
+}
+
 class TextureExampleViewController: UIViewController, ASTableDelegate, ASTableDataSource {
 
     let tableNode = ASTableNode()
