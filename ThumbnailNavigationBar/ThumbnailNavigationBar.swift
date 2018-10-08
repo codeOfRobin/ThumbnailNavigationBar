@@ -28,7 +28,7 @@ class ThumbnailNavigationBar: UINavigationBar {
     }
 
 
-    var preferredBarStyle = UIBarStyle.black {
+    var preferredBarStyle = UIBarStyle.default {
         didSet {
             if oldValue == preferredBarStyle {
                 return
@@ -100,11 +100,13 @@ class ThumbnailNavigationBar: UINavigationBar {
         self.insertSubview(self.separatorView, at: 1)
 
         //TODO: Figure out this code by asking Tim
-        let reference = self.bounds
-        self.backgroundView.frame = CGRect(x: reference.origin.x, y: -reference.minY, width: reference.width, height: self.frame.maxY)
+        var reference = self.bounds
+        reference.origin.y = -self.frame.minY
+        reference.size.height = self.frame.maxY
+        self.backgroundView.frame = reference
 
         //TODO: Double check to make sure this works
-        self.separatorView.frame = self.bounds.divided(atDistance: self.separatorHeight, from: CGRectEdge.maxYEdge).remainder
+        self.separatorView.frame = self.bounds.divided(atDistance: self.separatorHeight, from: CGRectEdge.maxYEdge).slice
 
 
         if let titleView = self.topItem?.titleView {
@@ -141,9 +143,15 @@ class ThumbnailNavigationBar: UINavigationBar {
         let totalHeight = self.frame.maxY
         let barHeight = self.frame.height
 
-        let offsetHeight = scrollView.contentOffset.y - scrollViewMinimumOffset
+        //TODO: Figure this out
+        var offsetHeight = scrollView.contentOffset.y - scrollViewMinimumOffset + totalHeight
         // if offsetHeight is between 0 and totalHeight, we have to draw the nav bar, if it's greater, we have to show the nav bar
-        let barShouldBeVisible = offsetHeight > totalHeight
+        offsetHeight = max(offsetHeight, 0.0)
+        offsetHeight = min(offsetHeight, totalHeight)
+
+        let barShouldBeVisible = Float(offsetHeight) > 0.0 + .ulpOfOne;
+
+        print(barShouldBeVisible)
 
         let referenceFrame = self.backgroundView.frame
         if barShouldBeVisible {
@@ -165,7 +173,7 @@ class ThumbnailNavigationBar: UINavigationBar {
         titleView.alpha = alpha
 
         self.tintColor = (offsetHeight > barHeight * 0.5) ? self.preferredTintColor : UIColor.white
-        self.barStyle = offsetHeight > ((totalHeight - barHeight) * 0.5) ? self.preferredBarStyle : .black
+        self.barStyle = offsetHeight > ((totalHeight - barHeight) * 0.5) ? self.preferredBarStyle : .default
     }
 
     // MARK: KVO Handling
@@ -196,7 +204,7 @@ class ThumbnailNavigationBar: UINavigationBar {
         }
 
         let toggleBarStyleBlock: () -> Void = {
-            self.barStyle = hidden ? .black : self.preferredBarStyle
+            self.barStyle = hidden ? .black: self.preferredBarStyle
         }
 
         backgroundHidden = hidden

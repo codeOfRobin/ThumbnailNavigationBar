@@ -51,7 +51,12 @@ class SubSubViewController: UITableViewController {
     }
 
     override func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        print(scrollView.contentOffset.y)
         self.headerView?.scrollOffset = scrollView.contentOffset.y
+    }
+
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
     }
 
 }

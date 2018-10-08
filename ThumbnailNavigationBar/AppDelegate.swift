@@ -17,7 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
 
-        let viewController = ViewController(nibName: nil, bundle: nil)
+        let viewController = TextureExampleViewController(nibName: nil, bundle: nil)
         let navController = UINavigationController(navigationBarClass: ThumbnailNavigationBar.self, toolbarClass: nil)
         navController.viewControllers = [viewController]
 

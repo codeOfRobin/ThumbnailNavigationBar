@@ -7,6 +7,50 @@
 //
 
 import UIKit
+import AsyncDisplayKit
+
+protocol ScrollingResponsiveHeader where Self: ASDisplayNode {
+    func respondToScrollOffset(_ scrollOffset: CGFloat)
+}
+
+class CoolHeaderWithButton: ASDisplayNode, ScrollingResponsiveHeader, ASNetworkImageNodeDelegate {
+
+    func respondToScrollOffset(_ scrollOffset: CGFloat) {
+        print(scrollOffset)
+    }
+
+    let header = ASNetworkImageNode()
+    let headerURL: URL
+    let height: CGFloat
+
+    init(url: URL, height: CGFloat) {
+        self.headerURL = url
+        self.height = height
+        super.init()
+        self.addSubnode(header)
+    }
+    
+    override func didLoad() {
+        super.didLoad()
+        self.header.image = UIImage(named: "Firewatch")
+        self.header.backgroundColor = .red
+        self.header.delegate = self
+    }
+
+    override func layout() {
+        self.frame = CGRect.init(x: 0, y: 0, width: self.bounds.width, height: height)
+        self.header.frame = self.bounds
+    }
+
+    override func layoutIfNeeded() {
+        super.layoutIfNeeded()
+    }
+
+    override func layoutSpecThatFits(_ constrainedSize: ASSizeRange) -> ASLayoutSpec {
+        return ASStackLayoutSpec(direction: .vertical, spacing: 0.0, justifyContent: .center, alignItems: .center, children: [header])
+    }
+}
+
 
 class ThumbnailHeaderImageView: UIView {
 
@@ -69,6 +113,8 @@ class ThumbnailHeaderImageView: UIView {
         super.init(frame: CGRect(x: 0, y: 0, width: 320, height: height))
         self.contentMode = .scaleAspectFill
         self.imageView.clipsToBounds = true
+
+        setupViews()
     }
 
     required init?(coder aDecoder: NSCoder) {
