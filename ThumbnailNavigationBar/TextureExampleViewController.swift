@@ -51,7 +51,7 @@ class TextureExampleViewController: UIViewController, ASTableDelegate, ASTableDa
         self.navigationItem.largeTitleDisplayMode = .never
         self.tableNode.view.contentInsetAdjustmentBehavior = .never
 
-        headerImage.url = TextureExampleViewController.thumbnailURL!
+        headerImage.image = UIImage(named: "Firewatch")
         self.tableNode.view.tableHeaderView = header
         self.tableNode.dataSource = self
         self.tableNode.delegate = self
@@ -73,7 +73,16 @@ class TextureExampleViewController: UIViewController, ASTableDelegate, ASTableDa
 
     func tableNode(_ tableNode: ASTableNode, nodeForRowAt indexPath: IndexPath) -> ASCellNode {
         let node =  RedNode()
-        node.backgroundColor = .green
+		switch indexPath.row % 3 {
+		case 0:
+			node.backgroundColor = .cyan
+		case 1:
+			node.backgroundColor = .orange
+		case 2:
+			node.backgroundColor = .purple
+		default:
+			break
+		}
         return node
     }
 
